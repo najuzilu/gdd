@@ -1,0 +1,25 @@
+svg text{
+	font-size:12px;
+}
+
+.label {
+	text-align: center;
+}
+
+.axis path {
+	fill:none;
+	stroke:none;
+}
+
+.axis line {
+	fill: none;
+	stroke:#000000;
+	shape-rendering: crispEdges;
+}
+
+.gaussian_line line{
+	stroke:#ccc;
+	shape-rendering: crispEdges;
+	stroke-dasharray:1,1;
+}
+

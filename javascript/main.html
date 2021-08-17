@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+	<meta charset="utf-8">
+
+	<!-- Google fonts -->
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,800,700,300' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+
+	<!-- D3 -->
+	<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<!-- Combobox script for the search box -->
+	<script src="js/bootstrap-combobox.js"></script>
+	<link href="css/bootstrap-combobox.css" type="text/css" rel="stylesheet">
+
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <!-- Bootstrap Bundle with Popper -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+
+	<!-- Data -->
+	<!-- <script src="js/"></script> -->
+	<script src="js/setup.js"></script>
+	<script src="js/data.js"></script>
+	<script src="js/metadata.js"></script>
+
+	<!-- style -->
+	<link href="css/style.css" type="text/css" rel="stylesheet">
+
+<body>
+	<div class="chartWrapper">
+		<div id="cont" class="container-fluid">
+			<!-- Intro -->
+			<div class="row" style="padding: 5px 0px">
+				<div class="col-sm-4 column">
+					<div class="row" style="padding: 0px 50px">
+						<div class="col-md-12 column text-center">
+							<h2 class="titles">Global Debt</h2>
+							<span class="subheader">Since 1950</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-7 column">
+					<div class="row">
+						<div class="col-md-12 column" style="padding-top: 10px;">
+							<p><span style="font-size: 12px;" class="expl">The Global Debt Database (GDD) is the result of a multiyear investigative process that started with the October 2016 Fiscal Monitor. The dataset comprises total gross debt of the (private and public) nonfinancial sector for an unbalanced panel of 190 advanced economies, emerging market economies and low-income countries, dating back to 1950. For more details on the methodology and definitions, please see the Mbaye, Moreno Badia and Chae (2018).<br>
+							We rely on the feedback from users to address any problems they may encounter with the data. Notification of any omissions or supplementary sources is welcome and would be fully acknowledged.
+							</span></p>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-top: 20px;">
+					<div class="col-md-6 column text-center">
+						<span style="font-size: 11px;">Size of bubbles stands for nominal GDP</span>
+						<div class="bubbleLegend"></div>
+					</div>
+					<div class="col-md-6 column text-center">
+						<span style="font-size: 11px;">Color gives share of private debt</span>
+						<div class="colorLegend"></div>
+					</div>
+
+				</div>
+			</div>
+
+			<hr>
+
+			<!-- Indicator, year, view buttons -->
+			<div class="row text-center">
+				<!-- private debt selection -->
+				<div class="col-sm-4 offset-sm-1 column text-center">
+					<div class="form-group">
+						<select id="privateDebt" class="form-select">
+						</select>
+					  </div>
+				</div>
+				<!-- public debt selection -->
+				<div class="col-sm-3 column text-center">
+					<div class="form-group">
+						<select id="publicDebt" class="form-select">
+						</select>
+					  </div>
+				</div>
+
+				<!-- year selection -->
+				<div class="col-sm-1 column text-center">
+					<div class="form-group">
+						<select id="years" class="form-select">
+						</select>
+					</div>
+				</div>
+
+				<!-- display view -->
+				<div class="col-sm-2 column text-center">
+					<div class="form-group">
+						<select class="form-select">
+							<option selected value="displayAll">All Economies</option>
+							<option value="byIncGroup">By Income Group</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<!-- chart -->
+			<div class="row">
+				<div class="col-md-12 column text-center">
+					<div class="chart"></div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+
+</html>
