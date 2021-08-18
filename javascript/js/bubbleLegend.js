@@ -7,12 +7,15 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 
 	// clean legend text prior to appending
 	$("#bubbleLegend span").remove();
+	$("#bubbleLegend svg").remove();
 
 	// Append text
-	$("#bubbleLegend").append($("<span>", {
+	var target = $(".bubbleLegend");
+	var element = $("<span>", {
 		style: "font-size: 11px",
 		html: "Size of bubbles stands for <br/>" + meta[prvDebt]["label"].toLowerCase() + " as share of GDP",
-	}));
+	});
+	element.insertBefore(target);
 
 	var r_indicator = prvDebt;
 	var format = d3.format(",.0f");
