@@ -1,0 +1,15 @@
+name: gdd
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - boto3
+  - requests
+  - pandas
+  - numpy
+  - psycopg2
+  - black
+  - flake8
+  - pre_commit
