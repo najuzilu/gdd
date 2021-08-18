@@ -1,5 +1,28 @@
-svg text{
-	font-size:12px;
+body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+	font-weight: 300;
+	fill: #4A4A4A;
+}
+
+.form-select {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 12px;
+}
+
+.titles, h2, h3 {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 400;
+}
+
+.subheader{
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #949494;
+}
+
+.chart {
+	margin-top: 30px;
 }
 
 .label {
@@ -17,9 +40,8 @@ svg text{
 	shape-rendering: crispEdges;
 }
 
-.gaussian_line line{
+.gaussian_line line {
 	stroke:#ccc;
 	shape-rendering: crispEdges;
-	stroke-dasharray:1,1;
+	stroke-dasharray: 1,1;
 }
-
