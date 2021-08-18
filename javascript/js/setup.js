@@ -86,7 +86,7 @@ $(document).ready(function() {
 		// UPDATE CHART HERE!!
 		//
 		createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
-		createBubleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
+		createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	});
 
 	$("#years").on("change", function(){
