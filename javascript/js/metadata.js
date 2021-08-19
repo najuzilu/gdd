@@ -71,4 +71,14 @@ var meta = {
 		"unit": "Percent of GDP",
 		"indicator": "PS_DEBT_GDP",
 	},
+};
+
+var regions = {
+	"Latin America & Caribbean ": 0,
+	"East Asia & Pacific": 1,
+	"Europe & Central Asia": 2,
+	"North America": 3,
+	"Middle East & North Africa": 4,
+	"South Asia": 5,
+	"Sub-Saharan Africa ":6
 }

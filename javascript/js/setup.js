@@ -63,6 +63,7 @@ $(document).ready(function() {
 	// draw chart
 	createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
+	createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 
 	$("#privateDebt").on("change", function(){
 		// get updated values from form groups
@@ -75,6 +76,7 @@ $(document).ready(function() {
 		//
 		createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
 		createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
+		createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	});
 
 	$("#publicDebt").on("change", function(){
@@ -87,6 +89,7 @@ $(document).ready(function() {
 		//
 		createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
 		createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
+		createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	});
 
 	$("#years").on("change", function(){
@@ -99,6 +102,7 @@ $(document).ready(function() {
 		//
 		createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
 		createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
+		createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	});
 
 

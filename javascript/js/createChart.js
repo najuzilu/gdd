@@ -8,31 +8,16 @@ function createChart(data, pubDebt, prvDebt){
 	data = cleanData(data, x_indicator, r_indicator);
 
 	// Get data values > needed for scales
-	var x_max = d3.max(data, function(d){
-		return d[x_indicator];
-	});
-	var x_min = d3.min(data, function(d){
-		return d[x_indicator];
-	});
-	var r_max = d3.max(data, function(d){
-		return d[r_indicator];
-	});
-
-	// Function creates a distance threshold
-	var originCheck = function(a,b){
-		if (a < b){
-			return b;
-		} else {
-			return a;
-		}
-	}
+	var x_max = d3.max(data, d => d[x_indicator]);
+	var x_min = d3.min(data, d => d[x_indicator]);
+	var r_max = d3.max(data, d => d[r_indicator]);
 
 	// remove svg if exists
 	$("svg#chart").remove();
 
 	// Get width and set height
 	var width = $(".chart").parent().width();
-	var height = width / 2.8;
+	var height = width / 2.5;
 	var format = d3.format(",.0f");
 
 	// Set all other vars
@@ -145,6 +130,14 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("x1", xScale.range()[0])
 		.attr("x2", xScale.range()[1]);
 
+	svg.append("text")
+		.attr("class", "gaussian_line_text")
+		.text("All Countries")
+		.attr("x", -100)
+		.attr("y", gaussianDistance_y + 2)
+		.style("font-weight", "bold")
+		.style("text-anchor", "left");
+
 
 	//Create the Glow Filter
 	var stdDeviation = 2.5;
@@ -190,15 +183,16 @@ function createChart(data, pubDebt, prvDebt){
 	simulation.nodes(data)
 		.on('tick',ticked);
 
-
 	// Create bubbles
 	var bubDistance_x = 0;
 	var bubDistance_y = 0;
-	// var colors = ['#466e12','#77bc1f','#C5E0B4','#A9DDEB','#009bde','#002060'].reverse();
-	var colors = ['#FFD166','#C6DABF','rgb(125, 207, 182)','rgb(0, 178, 202)','rgb(29, 78, 137)'];
+
 	var rDiv = Array.from(
 	{length: tickNo}, (v, k) => k * parseInt(((rDomain_max - rDomain_min) / tickNo) + rDomain_min)
 	);
+
+	var circleCount = calculateColorDividers(r_max);
+
 
 	// Variables for tooltip on bubbles
 	var rectWidth = 330;
@@ -228,24 +222,9 @@ function createChart(data, pubDebt, prvDebt){
 			.attr("x", d => d.x)
 			.attr("y", d => d.y)
 			.attr("r", d => rScale(d[r_indicator]))
-			.style("fill", function(d){
-				color_var = d[r_indicator];
-				if (d[r_indicator] < 0) {
-					return "grey";
-				}
-				if (color_var == null) {
-					return "#707C7C";
-				} else if (color_var>=rDiv[0] & color_var<rDiv[1]) {
-					return colors[0];
-				} else if (color_var>=rDiv[1] & color_var<rDiv[2]){
-					return colors[1];
-				} else if (color_var>=rDiv[2] & color_var<rDiv[3]){
-					return colors[2];
-				} else if (color_var>=rDiv[3] & color_var<rDiv[4]){
-					return colors[3];
-				} else {
-					return colors[4];
-				}
+			.style("fill", function(d,i) {
+				// Color by region
+				return colors[regions[d["region"]]];
 			})
 			.on("mouseover", function(){
 				tooltip.style("display", null);
@@ -354,6 +333,39 @@ function createChart(data, pubDebt, prvDebt){
 					.style("fill", "#262626")
 					.text(format(d[prvDebt]));
 			});
+
+	// vertical mean line
+	var meanValue = d3.mean(data, d => d[x_indicator]);
+	var mean_y0 = gaussianDistance_y - 140;
+	var mean_y1 = gaussianDistance_y + 155;
+
+	mean = svg.append("g")
+		.attr("class", "mean");
+
+	mean.append("line")
+		.attr("class", "mean_line")
+		.attr("x1", xScale(meanValue))
+		.attr("x2", xScale(meanValue))
+		.attr("y1", mean_y0)
+		.attr("y2", mean_y1)
+		.attr("stroke", "#000")
+		.attr("stroke-width", 2);
+
+	mean.append("text")
+		.attr("class", "mean_text")
+		.text("Average")
+		.attr("x", xScale(meanValue))
+		.attr("y", mean_y1 + 10)
+		.style("font-weight", "bold")
+		.style("text-anchor", "middle");
+
+	mean.append("text")
+		.attr("class", "mean_text_value")
+		.text(format(meanValue) + "%")
+		.attr("x", xScale(meanValue))
+		.attr("y", mean_y1 + 25)
+		.style("font-weight", "bold")
+		.style("text-anchor", "middle");
 
 
 	// Create tooltip

@@ -29,6 +29,11 @@ body {
 	text-align: center;
 }
 
+.legendCircle text {
+	margin-top: 2.5px;
+	margin-bottom: 2.5px;
+}
+
 .axis path {
 	fill:none;
 	stroke:none;

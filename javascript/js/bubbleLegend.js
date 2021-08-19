@@ -1,5 +1,21 @@
 // Create legends
 
+function calculateColorDividers(r_max){
+	var start = 1;
+	var end = Math.ceil(r_max / 100) * 100;
+	if (r_max < 100) {
+		var count = parseInt(end/50);
+	} else if (r_max < 200) {
+		var count = parseInt(end/100);
+	} else if (r_max < 300) {
+		var count = parseInt(end/100);
+	} else {
+		var count = parseInt(end/200);
+	}
+	var circlesCount = d3.ticks(start, end, count);
+	return circlesCount;
+}
+
 function createBubbleLegend(data, pubDebt, prvDebt){
 
 	// Clean data
@@ -53,19 +69,8 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.attr("class", "legendCircle")
 		.attr("transform", "translate(" + 0 + "," + 0 + ")");
 
-	var start = 1;
-	var end = Math.ceil(r_max / 100) * 100;
-	if (r_max < 100) {
-		var count = parseInt(end/50);
-	} else if (r_max < 200) {
-		var count = parseInt(end/100);
-	} else if (r_max < 300) {
-		var count = parseInt(end/100);
-	} else {
-		var count = parseInt(end/200);
-	}
 
-	var circlesCount = d3.ticks(start, end, count).reverse();
+	var circlesCount = calculateColorDividers(r_max).reverse();
 
 	legend.selectAll("circle")
 		.data(circlesCount)
@@ -97,6 +102,67 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.attr("x", width / 2 + 55)
 		.attr("y", d => (height / 1.25) - 2 * rScale(d) + 5 )
 		.style("text-anchor", "left")
-		.attr("font-size", "8px")
+		.attr("font-size", "9px")
 		.text(d => format(parseInt(d)) + "%");
+}
+
+function createColorLegend(data, pubDebt, prvDebt){
+	// Clean data
+	data = cleanData(data, pubDebt, prvDebt);
+
+	// clean legend text prior to appending
+	$("#colorLegend span").remove();
+	$("#colorLegend svg").remove();
+
+	// Append text
+	var target = $(".colorLegend");
+	var element = $("<span>", {
+		style: "font-size: 11px",
+		html: "Color of bubbles represents world regions"
+	});
+	element.insertBefore(target);
+
+	//
+	var width = 360;
+	var height = 100;
+
+	var svg = d3.select("body")
+		.select(".colorLegend")
+		.append("svg")
+		.style("width", width)
+		.style("height", height)
+		.style("overflow", "visible");
+
+	var legend = svg.append("g")
+		.attr("class", "legendColor")
+		.attr("transform", "translate(" + 0 + "," + 0 + ")");
+
+	var legendBarWidth = 20;
+	var legendBarHeight = 7;
+	var regionLength = Object.keys(regions).length;
+	var emptySpace = (height - regionLength * legendBarHeight) / (regionLength + 2);
+
+	legend.append("g")
+		.attr("class", "colorLegendBars")
+		.selectAll("rect")
+		.data(colors)
+		.enter()
+		.append("rect")
+		.attr("x", width * 0.22)
+		.attr("y", (d, i) => (i+1) * emptySpace + (i * legendBarHeight))
+		.attr("width", legendBarWidth)
+		.attr("height", legendBarHeight)
+		.attr("fill", d => d);
+
+	legend.selectAll("text")
+		.data(colors)
+		.enter()
+		.append("text")
+		.attr("x", width * 0.22 + legendBarWidth + 20)
+		.attr("y", (d, i) => (i+1) * emptySpace + (i * legendBarHeight)+ legendBarHeight)
+		.style("text-anchor", "left")
+		.attr("font-size", "10px")
+		.text((d,i) => Object.keys(regions).find(key => regions[key] === i));
+
+
 }
