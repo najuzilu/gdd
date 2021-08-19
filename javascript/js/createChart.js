@@ -26,7 +26,7 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 		var line = svg.append("g")
 			.attr("class", "debtRatioStat");
 
-		var y_coord = gauss_y + 150;
+		var y_coord = gauss_y + 160;
 
 		line.append("path")
 			.attr("d",
@@ -53,7 +53,7 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 		line.append("text")
 			.attr("class", "text")
 			.attr("font-style", "italic")
-			.text("in the sample have debt ratios")
+			.text("in the sample have debt shares")
 			.attr("text-anchor", "middle")
 			.attr("x", xscale(midXValue))
 			.attr("y", y_coord + 60);
@@ -72,6 +72,8 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 
 
 function createChart(data, pubDebt, prvDebt){
+	// remove rep text
+	$(".circleRepText").remove();
 
 	var x_indicator = pubDebt;
 	var r_indicator = prvDebt;
@@ -90,7 +92,7 @@ function createChart(data, pubDebt, prvDebt){
 
 	// Get width and set height
 	var width = $(".chart").parent().width();
-	var height = width / 2.25;
+	var height = width / 2.1;
 
 	// Set all other vars
 	var distance = {
@@ -193,7 +195,7 @@ function createChart(data, pubDebt, prvDebt){
 
 	// Setting line for distribution
 	var gaussianDistance_x = xAxisDistance_x;
-	var gaussianDistance_y = xAxisDistance_y + width * 0.14;
+	var gaussianDistance_y = xAxisDistance_y + width * 0.16;
 	var line = svg.append("g")
 		.attr("class", "gaussian_line")
 		.attr("transform", "translate(" + gaussianDistance_x + "," + gaussianDistance_y + ")");
@@ -241,19 +243,10 @@ function createChart(data, pubDebt, prvDebt){
 		)
 		.force("y", d3.forceY(simDistribution))
 		.force("collide",
-			d3.forceCollide(d => rScale(d[r_indicator]))
+			d3.forceCollide()
+				.radius(d => rScale(d[r_indicator]))
 		)
 		.alpha(alpha);
-
-	//Feed the force simulation all our data
-	function ticked(d){
-		bubbles
-			.attr("cx",function(d){return d.x;})
-			.attr("cy",function(d){return d.y;});
-	}
-
-	simulation.nodes(data)
-		.on('tick',ticked);
 
 	// Create bubbles
 	var bubDistance_x = 0;
@@ -291,8 +284,8 @@ function createChart(data, pubDebt, prvDebt){
 			.attr("class", d => "bubble " + d.country)
 			.style("stroke", "#000")
 			.style("stroke-width", 0.1)
-			.attr("x", d => d.x)
-			.attr("y", d => d.y)
+			.attr("cx", d => d.x)
+			.attr("cy", d => d.y)
 			.attr("r", d => rScale(d[r_indicator]))
 			.style("fill", function(d,i) {
 				// Color by region
@@ -424,6 +417,96 @@ function createChart(data, pubDebt, prvDebt){
 					.text(format(d[prvDebt]));
 			});
 
+
+	//Feed the force simulation all our data
+	function ticked(){
+		bubbles
+			.attr("cx", d => d.x)
+			.attr("cy", d => d.y);
+	}
+
+	simulation.nodes(data)
+		.on("tick", ticked)
+		.on("end", () => {
+			// have to wait for simulation to end
+			// in order to add circleRepText
+
+			// sort data by greatest x_indicator
+			var sortedData = [...data].sort(function(a, b){
+			    if (a[x_indicator] < b[x_indicator]){
+			        return 1;
+			    } else if (a[x_indicator] > b[x_indicator]){
+			        return -1;
+			    } else {
+			        return 0;
+			    }
+			});
+
+			// get greatest class name
+			var obs = sortedData[0];
+			var name = obs["country"];
+			var countryName = obs["countryName"];
+			// set coordinates
+			var y1_coord = parseFloat($("." + name)[0].getAttribute("cy"));
+			var y2_coord = gaussianDistance_y + 150;
+
+			var svg = d3.select(".chart")
+				.select("svg")
+				.select("g");
+
+			var line = svg.append("g")
+				.attr("class", "circleRepText");
+
+			var x_coord = xScale(obs[x_indicator]);
+			line.append("line")
+				.attr("x1", x_coord)
+				.attr("x2", x_coord)
+				.attr("y1", y1_coord + rScale(obs[r_indicator]))
+				.attr("y2", y2_coord)
+				.attr("stroke", "#ccc")
+				.attr("stroke-width", 0.75);
+
+			var rIndicatorLabel = meta[r_indicator]["label"].toLowerCase();
+
+			if (rIndicatorLabel.length > 32) {
+				// add share of GDP to text
+				rIndicatorLabel += " as share of GDP";
+				var arr = rIndicatorLabel.split(" ");
+				var firstHalf = arr.slice(0, arr.length / 2).join(" ");
+				var secondHalf = arr.slice(arr.length / 2, arr.length).join(" ");
+				var texts = [
+					"Each circle represents",
+					"a country sized by the",
+					firstHalf,
+					secondHalf +".",
+					countryName + " has private debt",
+					"shares of " + format(obs[r_indicator]) + " percent."
+				];
+			} else {
+				var texts = [
+					"Each circle represents",
+					"a country sized by the",
+					rIndicatorLabel,
+					"as share pf GDP. " + countryName,
+					"has private debt shares of " + format(obs[r_indicator]) + " percent."
+				];
+			}
+			var textsYcoord = Array.from({ length: texts.length }, (_, k) =>
+				y2_coord + (k + 1) * 15
+			);
+
+			textsYcoord.forEach(function(d, i){
+				line.append("text")
+					.attr("class", "text")
+					.attr("font-style", "italic")
+					.text(texts[i])
+					.attr("text-anchor", "middle")
+					.attr("x", x_coord)
+					.attr("y", textsYcoord[i]);
+			});
+		});
+
+
 	// vertical mean line
 	var meanValue = d3.mean(data, d => d[x_indicator]);
 	var mean_y0 = gaussianDistance_y - 140;
@@ -445,7 +528,7 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("class", "mean_text")
 		.text("Average")
 		.attr("x", xScale(meanValue))
-		.attr("y", mean_y1 + 10)
+		.attr("y", mean_y0 - 25)
 		.style("font-weight", "bold")
 		.style("text-anchor", "middle");
 
@@ -453,7 +536,7 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("class", "mean_text_value")
 		.text(format(meanValue) + "%")
 		.attr("x", xScale(meanValue))
-		.attr("y", mean_y1 + 25)
+		.attr("y", mean_y0 - 10)
 		.style("font-weight", "bold")
 		.style("text-anchor", "middle");
 
@@ -532,6 +615,5 @@ function createChart(data, pubDebt, prvDebt){
 	debtRatioText(data, x_indicator, r_indicator,
 		gaussianDistance_y, xScale
 	);
-
 
 }
