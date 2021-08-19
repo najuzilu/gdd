@@ -1,3 +1,6 @@
+// format float to closest int
+var format = d3.format(",.0f");
+
 var colors = [
 	"#466e12", "#77bc1f", "#C5E0B4",
 	"#FFD166", "#A9DDEB", "#009bde",

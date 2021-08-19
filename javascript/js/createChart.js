@@ -1,3 +1,76 @@
+function debtRatioText(data, x, r, gauss_y, xscale){
+	// Create text below bubbles
+	// Calculate share of countries have debt ratio
+	// below first axis value
+	var totalCount;
+	var count;
+    var xValue = parseInt(
+    	$(".tick > text")[1].innerHTML.slice(0, -1)
+    );
+    var midXValue = parseInt(xValue / 2);
+	[count, totalCount] = debtRatioStat(
+		data, x, r, xValue
+	);
+
+	var svg = d3.select(".chart")
+		.select("svg")
+		.select("g");
+
+	// draw text only if data.length is over 10
+	if (totalCount > 20){
+		// delete line prior to drawing it
+		$(".debtRatioStat").remove();
+
+		// draw text
+		var ratio = count / totalCount;
+		var line = svg.append("g")
+			.attr("class", "debtRatioStat");
+
+		var y_coord = gauss_y + 150;
+
+		line.append("path")
+			.attr("d",
+				"M " + xscale.range()[0] + " " + (y_coord + 20 - 5) +
+				" L " + xscale.range()[0] + " " + (y_coord + 20) +
+				" L " + xscale(midXValue) + " " + (y_coord + 20) +
+				" L " + xscale(midXValue) + " " + (y_coord + 20 + 15) +
+				" M " + xscale(midXValue) + " " + (y_coord + 20) +
+				" L " + xscale(xValue) + " " + (y_coord + 20) +
+				" L " + xscale(xValue) + " " + (y_coord + 20 - 5)
+			)
+			.attr("fill", "none")
+			.attr("stroke", "#ccc")
+			.attr("stroke-width", 0.75);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("About " + format(ratio * 100) + " percent of countries")
+			.attr("text-anchor", "middle")
+			.attr("x", xscale(midXValue))
+			.attr("y", y_coord + 45);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("in the sample have debt ratios")
+			.attr("text-anchor", "middle")
+			.attr("x", xscale(midXValue))
+			.attr("y", y_coord + 60);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("less than " + format(xValue) + " percent.")
+			.attr("text-anchor", "middle")
+			.attr("x", xscale(midXValue))
+			.attr("y", y_coord + 75);
+	} else {
+		$(".debtRatioStat").remove();
+	}
+}
+
+
 function createChart(data, pubDebt, prvDebt){
 
 	var x_indicator = pubDebt;
@@ -17,8 +90,7 @@ function createChart(data, pubDebt, prvDebt){
 
 	// Get width and set height
 	var width = $(".chart").parent().width();
-	var height = width / 2.5;
-	var format = d3.format(",.0f");
+	var height = width / 2.25;
 
 	// Set all other vars
 	var distance = {
@@ -455,5 +527,11 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("dy", ".35em")
 		.attr("text-anchor", "end")
 		.attr("class", "prvdebt_value");
+
+	// create debt ratio text at the bottom
+	debtRatioText(data, x_indicator, r_indicator,
+		gaussianDistance_y, xScale
+	);
+
 
 }

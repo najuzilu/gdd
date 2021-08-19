@@ -36,7 +36,7 @@ function cleanData(data, x, r){
 	var new_data = [];
 
 	data.forEach(function(item, index) {
-		if (!(isNaN(item[x]))){
+		if (!(isNaN(item[x]) || isNaN(item[r]))){
 			new_data.push(item);
 		}
 	})
