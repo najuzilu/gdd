@@ -101,7 +101,7 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.append("text")
 		.attr("x", width / 2 + 55)
 		.attr("y", d => (height / 1.25) - 2 * rScale(d) + 5 )
-		.style("text-anchor", "left")
+		.style("text-anchor", "start")
 		.attr("font-size", "9px")
 		.text(d => format(parseInt(d)) + "%");
 }
@@ -160,7 +160,7 @@ function createColorLegend(data, pubDebt, prvDebt){
 		.append("text")
 		.attr("x", width * 0.22 + legendBarWidth + 20)
 		.attr("y", (d, i) => (i+1) * emptySpace + (i * legendBarHeight)+ legendBarHeight)
-		.style("text-anchor", "left")
+		.style("text-anchor", "start")
 		.attr("font-size", "10px")
 		.text((d,i) => Object.keys(regions).find(key => regions[key] === i));
 

@@ -136,7 +136,7 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("x", -100)
 		.attr("y", gaussianDistance_y + 2)
 		.style("font-weight", "bold")
-		.style("text-anchor", "left");
+		.attr("text-anchor", "start");
 
 
 	//Create the Glow Filter
@@ -199,9 +199,9 @@ function createChart(data, pubDebt, prvDebt){
 	var splitTextLength = 40;
 
 	if (meta[prvDebt]["label"].length > splitTextLength) {
-		var rectHeight = 80;
+		var rectHeight = 100;
 	} else{
-		var rectHeight = 70;
+		var rectHeight = 90;
 	}
 
 	var triangleHeight = rectHeight / 7;
@@ -240,33 +240,37 @@ function createChart(data, pubDebt, prvDebt){
 				// start x,y coordinates of tooltip titles
 				//   and indicator names
 				var tooltipTitle_x = 1/25 * rectWidth;
-				var tooltipInd1_x = tooltipTitle_x;
-				var tooltipInd2_x = tooltipInd1_x;
-				var tooltipInd3_x = tooltipInd2_x;
+				var tooltipInd1_x = tooltipTitle_x; 			// country name
+				var tooltipInd2_x = tooltipInd1_x;				// region
+				var tooltipInd3_x = tooltipInd2_x;				// pub
+				var tooltipInd4_x = tooltipInd3_x;				// prv
 
 
 				// fix tooltip coordinates if private debt indicator
 				// 	name is too long
 				if (meta[prvDebt]["label"].length > splitTextLength){
-					var tooltipTitle_y = 1/5 * rectHeight;
-					var tooltipInd1_y = 2 * tooltipTitle_y;
-					var tooltipInd2_y = 3 * tooltipTitle_y;
-					var tooltipInd3_y = 4 * tooltipTitle_y;
+					var tooltipTitle_y = 1/6 * rectHeight; 		// country name
+					var tooltipInd1_y = 2 * tooltipTitle_y; 	// region
+					var tooltipInd2_y = 3 * tooltipTitle_y; 	// pub
+					var tooltipInd3_y = 4 * tooltipTitle_y; 	// prv
+					var tooltipInd4_y = 5 * tooltipTitle_y; 	// second prv line
 					// fix indicator value y coordinate
-					var tooltipInd2_val_y = tooltipInd3_y;
+					var tooltipInd3_val_y = tooltipInd4_y;		// prv value to next line
 				} else {
-					var tooltipTitle_y = 1/4 * rectHeight;
-					var tooltipInd1_y = 2 * tooltipTitle_y;
-					var tooltipInd2_y = 3 * tooltipTitle_y;
-					var tooltipInd3_y = null;
+					var tooltipTitle_y = 1/5 * rectHeight; 		// country name
+					var tooltipInd1_y = 2 * tooltipTitle_y;		// region
+					var tooltipInd2_y = 3 * tooltipTitle_y;		// pub
+					var tooltipInd3_y = 4 * tooltipTitle_y;		// prv
 					// fix indicator value y coordinate
-					var tooltipInd2_val_y = tooltipInd2_y;
+					var tooltipInd3_val_y = tooltipInd3_y;		// prv value
 				}
 
 				// start coordinates of tooltip indicator values
 				var tooltipInd1_val_x = rectWidth - tooltipInd1_x;
 				var tooltipInd1_val_y = tooltipInd1_y;
 				var tooltipInd2_val_x = tooltipInd1_val_x;
+				var tooltipInd2_val_y = tooltipInd2_y;
+				var tooltipInd3_val_x = tooltipInd2_val_x;
 
 				// on mouse position get cx, cy, and r of hover bubble
 				var xPos = d3.select(this).attr("cx");
@@ -287,48 +291,62 @@ function createChart(data, pubDebt, prvDebt){
 					.style("fill","#262626")
 					.text(d.countryName + " (" + d.year +")");
 
-				tooltip.select("text.pubdebt")
+				tooltip.select("text.region")
 					.attr("x", tooltipInd1_x)
 					.attr("y", tooltipInd1_y)
 					.style("fill", "#262626")
-					.text(meta[pubDebt]["label"] + " (% of GDP):");
+					.text("Region");
+
+				tooltip.select("text.pubdebt")
+					.attr("x", tooltipInd2_x)
+					.attr("y", tooltipInd2_y)
+					.style("fill", "#262626")
+					.text(meta[pubDebt]["label"] + " (% of GDP)");
 
 				// private debt variables too long, append unit below
 				if (meta[prvDebt]["label"].length > splitTextLength) {
-					var indi2Text = meta[prvDebt]["label"] + " (% of GDP):";
-					var arr = indi2Text.split(" ")
+					var indi3Text = meta[prvDebt]["label"] + " (% of GDP)";
+					var arr = indi3Text.split(" ")
 					var firstHalf = arr.slice(0, arr.length/2).join(" ");
 					var secondHalf = arr.slice(arr.length/2, arr.length).join(" ");
 
 					tooltip.select("text.prvdebt")
-						.attr("x", tooltipInd2_x)
-						.attr("y",tooltipInd2_y)
+						.attr("x", tooltipInd3_x)
+						.attr("y",tooltipInd3_y)
 						.style("fill","#262626")
 						.text(firstHalf);
 
 					tooltip.select("text.prvdebt_unit")
-						.attr("x", tooltipInd3_x)
-						.attr("y",tooltipInd3_y)
+						.attr("x", tooltipInd4_x)
+						.attr("y",tooltipInd4_y)
 						.style("fill","#262626")
 						.text(secondHalf);
 				} else {
+					// prv can fit in one line
 					tooltip.select("text.prvdebt")
-						.attr("x", tooltipInd2_x)
-						.attr("y",tooltipInd2_y)
+						.attr("x", tooltipInd3_x)
+						.attr("y",tooltipInd3_y)
 						.style("fill","#262626")
-						.text(meta[prvDebt]["label"]+ " (% of GDP):");
+						.text(meta[prvDebt]["label"]+ " (% of GDP)");
 				}
 
-				tooltip.select("text.pubdebt_value")
+				tooltip.select("text.region_value")
 					.attr("x", tooltipInd1_val_x)
 					.attr("y", tooltipInd1_val_y)
+					.style("font-weight", "bold")
+					.style("fill", "#262626")
+					.text(d["region"]);
+
+				tooltip.select("text.pubdebt_value")
+					.attr("x", tooltipInd2_val_x)
+					.attr("y", tooltipInd2_val_y)
 					.style("font-weight","bold")
 					.style("fill", "#262626")
 					.text(format(d[pubDebt]));
 
 				tooltip.select("text.prvdebt_value")
-					.attr("x", tooltipInd2_val_x)
-					.attr("y", tooltipInd2_val_y)
+					.attr("x", tooltipInd3_val_x)
+					.attr("y", tooltipInd3_val_y)
 					.style("font-weight","bold")
 					.style("fill", "#262626")
 					.text(format(d[prvDebt]));
@@ -400,8 +418,12 @@ function createChart(data, pubDebt, prvDebt){
 	// append all text elements of tooltip
 	tooltip.append("text")
 		.attr("dy", ".35em")
-		.attr("text-anchor", "right")
+		.attr("text-anchor", "start")
 		.attr("class", "name");
+	tooltip.append("text")
+		.attr("dy", ".35em")
+		.attr("text-anchor", "start")
+		.attr("class", "region");
 	tooltip.append("text")
 		.attr("dy", ".35em")
 		.attr("text-anchor", "start")
@@ -421,6 +443,10 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("class", "prvdebt_unit");
 	}
 
+	tooltip.append("text")
+		.attr("dy", ".35em")
+		.attr("text-anchor", "end")
+		.attr("class", 'region_value');
 	tooltip.append("text")
 		.attr("dy", ".35em")
 		.attr("text-anchor", "end")
