@@ -1,4 +1,4 @@
-function debtRatioText(data, x, r, gauss_y, xscale){
+function debtRatioText(data, x, r, gauss_y){
 	// Create text below bubbles
 	// Calculate share of countries have debt ratio
 	// below first axis value
@@ -18,9 +18,6 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 
 	// draw text only if data.length is over 10
 	if (totalCount > 20){
-		// delete line prior to drawing it
-		$(".debtRatioStat").remove();
-
 		// draw text
 		var ratio = count / totalCount;
 		var line = svg.append("g")
@@ -30,13 +27,13 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 
 		line.append("path")
 			.attr("d",
-				"M " + xscale.range()[0] + " " + (y_coord + 20 - 5) +
-				" L " + xscale.range()[0] + " " + (y_coord + 20) +
-				" L " + xscale(midXValue) + " " + (y_coord + 20) +
-				" L " + xscale(midXValue) + " " + (y_coord + 20 + 15) +
-				" M " + xscale(midXValue) + " " + (y_coord + 20) +
-				" L " + xscale(xValue) + " " + (y_coord + 20) +
-				" L " + xscale(xValue) + " " + (y_coord + 20 - 5)
+				"M " + xScale.range()[0] + " " + (y_coord + 20 - 5) +
+				" L " + xScale.range()[0] + " " + (y_coord + 20) +
+				" L " + xScale(midXValue) + " " + (y_coord + 20) +
+				" L " + xScale(midXValue) + " " + (y_coord + 20 + 15) +
+				" M " + xScale(midXValue) + " " + (y_coord + 20) +
+				" L " + xScale(xValue) + " " + (y_coord + 20) +
+				" L " + xScale(xValue) + " " + (y_coord + 20 - 5)
 			)
 			.attr("fill", "none")
 			.attr("stroke", "#ccc")
@@ -47,7 +44,7 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 			.attr("font-style", "italic")
 			.text("About " + format(ratio * 100) + " percent of countries")
 			.attr("text-anchor", "middle")
-			.attr("x", xscale(midXValue))
+			.attr("x", xScale(midXValue))
 			.attr("y", y_coord + 45);
 
 		line.append("text")
@@ -55,7 +52,7 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 			.attr("font-style", "italic")
 			.text("in the sample have debt shares")
 			.attr("text-anchor", "middle")
-			.attr("x", xscale(midXValue))
+			.attr("x", xScale(midXValue))
 			.attr("y", y_coord + 60);
 
 		line.append("text")
@@ -63,10 +60,8 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 			.attr("font-style", "italic")
 			.text("less than " + format(xValue) + " percent.")
 			.attr("text-anchor", "middle")
-			.attr("x", xscale(midXValue))
+			.attr("x", xScale(midXValue))
 			.attr("y", y_coord + 75);
-	} else {
-		$(".debtRatioStat").remove();
 	}
 }
 
@@ -74,6 +69,7 @@ function debtRatioText(data, x, r, gauss_y, xscale){
 function createChart(data, pubDebt, prvDebt){
 	// remove rep text
 	$(".circleRepText").remove();
+	$(".debtRatioStat").remove();
 
 	var x_indicator = pubDebt;
 	var r_indicator = prvDebt;
@@ -95,13 +91,7 @@ function createChart(data, pubDebt, prvDebt){
 	var height = width / 2.1;
 
 	// Set all other vars
-	var distance = {
-		top: 0,
-		right: width*0.02,
-		bottom: 25,
-		left: width*0.15,
-	};
-	var svgDistance_x = distance.left;
+	var svgDistance_x = distance.left * width;
 	var svgDistance_y = distance.top;
 
 
@@ -116,6 +106,7 @@ function createChart(data, pubDebt, prvDebt){
 		.style("padding-top", "30px")
 		.style("background-color", "rgba(240, 240, 240, 0.5)")
 	  .append("g")
+	  	.attr("class", "allCountries")
 	  	.attr("transform", "translate(" + svgDistance_x + "," + svgDistance_y + ")");
 
 
@@ -123,9 +114,9 @@ function createChart(data, pubDebt, prvDebt){
 	var xDomain_min = 0;
 	var xDomain_max = x_max + 50; // !!FIX
 	var xRange_min = 0;
-	var xRange_max = width - svgDistance_x - distance.right - distance.left;
+	var xRange_max = width - svgDistance_x - (distance.right*width) - (distance.left*width);
 
-	var xScale = d3.scaleLinear()
+	xScale = d3.scaleLinear()
 		.domain([xDomain_min,xDomain_max])
 		.range([xRange_min,xRange_max]);
 
@@ -147,7 +138,7 @@ function createChart(data, pubDebt, prvDebt){
 	var rRange_min = width / 240;
 	var rRange_max = width / 55;
 
-	var rScale = d3.scaleSqrt()
+	rScale = d3.scaleSqrt()
 		.domain([rDomain_min, rDomain_max])
 		.range([rRange_min,rRange_max]);
 
@@ -251,12 +242,6 @@ function createChart(data, pubDebt, prvDebt){
 	// Create bubbles
 	var bubDistance_x = 0;
 	var bubDistance_y = 0;
-
-	var rDiv = Array.from(
-	{length: tickNo}, (v, k) => k * parseInt(((rDomain_max - rDomain_min) / tickNo) + rDomain_min)
-	);
-
-	var circleCount = calculateColorDividers(r_max);
 
 
 	// Variables for tooltip on bubbles
@@ -425,6 +410,7 @@ function createChart(data, pubDebt, prvDebt){
 			.attr("cy", d => d.y);
 	}
 
+
 	simulation.nodes(data)
 		.on("tick", ticked)
 		.on("end", () => {
@@ -434,7 +420,7 @@ function createChart(data, pubDebt, prvDebt){
 			// it looks asthetically pleasing.
 			// create debt ratio text at the bottom
 			debtRatioText(data, x_indicator, r_indicator,
-				gaussianDistance_y, xScale
+				gaussianDistance_y
 			);
 
 			// have to wait for simulation to end

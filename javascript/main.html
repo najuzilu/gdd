@@ -25,6 +25,7 @@
 	<script src="js/setup.js"></script>
 	<script src="js/createChart.js"></script>
 	<script src="js/bubbleLegend.js"></script>
+	<script src="js/updateChart.js"></script>
 	<script src="js/stats.js"></script>
 	<!-- Data -->
 	<script src="js/data.js"></script>
@@ -97,10 +98,7 @@
 				<!-- display view -->
 				<div class="col-sm-2 column text-center">
 					<div class="form-group">
-						<select class="form-select">
-							<option selected value="displayAll">All Countries</option>
-							<option value="byIncGroup">By Income Group</option>
-							<option value="byRegion">By Region</option>
+						<select id="viewCategory" class="form-select">
 						</select>
 					</div>
 				</div>
@@ -155,5 +153,4 @@
 		</div>
 	</div>
 </body>
-
 </html>

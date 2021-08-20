@@ -82,3 +82,10 @@ var regions = {
 	"South Asia": 5,
 	"Sub-Saharan Africa ":6
 }
+
+var incomeGroups = [
+	"High income",
+	"Upper middle income",
+	"Lower middle income",
+	"Low income",
+];

@@ -5,14 +5,20 @@ const privateDebtCategories = [
 	["Private debt, all instruments","pvd_all"],
 	["Household debt, all instruments","hh_all"],
 	["Nonfinancial corporate debt, all instruments","nfc_all"],
-]
+];
 
 const publicDebtCategories = [
 	["Central Government Debt","cg_debt"],
 	["General Government Debt","gg_debt"],
 	["Nonfinancial Public Sector Debt","nfps_debt"],
 	["Public Sector Debt","ps_debt"],
-]
+];
+
+const viewCategories = [
+	["All Countries", "displayAll"],
+	["By Income Group", "byIncGroup"],
+	["By Region", "byRegion"],
+];
 
 function addOptionCategories(selectId, selectArray){
 	selectArray.forEach(function(item, index){
@@ -32,18 +38,6 @@ function addOptionCategories(selectId, selectArray){
 }
 
 
-function cleanData(data, x, r){
-	var new_data = [];
-
-	data.forEach(function(item, index) {
-		if (!(isNaN(item[x]) || isNaN(item[r]))){
-			new_data.push(item);
-		}
-	})
-	return new_data;
-}
-
-
 $(document).ready(function() {
 	console.log("working...");
 
@@ -54,13 +48,15 @@ $(document).ready(function() {
 	addOptionCategories("privateDebt", privateDebtCategories);
 	addOptionCategories("publicDebt", publicDebtCategories);
 	addOptionCategories("years", yearRange);
+	addOptionCategories("viewCategory", viewCategories);
 
 	// default options
 	var prvDebtSelect = privateDebtCategories[0][1];
 	var pblDebtSelect = publicDebtCategories[0][1];
 	var yearSelect = yearRange[0][0];
+	var displayView = viewCategories[0][1];
 
-	// draw chart
+	// when page is created draw chart with default values
 	createChart(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	createBubbleLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
@@ -70,6 +66,9 @@ $(document).ready(function() {
 		var prvDebtSelect = this.value;
 		var pblDebtSelect = $("#publicDebt").find(":selected").attr("value");
 		var yearSelect = $("#years").find(":selected").attr("value");
+		var displayView = $("#viewCategory").find(":selected").attr("value");
+
+		console.log("private>>", displayView);
 
 		//
 		// UPDATE CHART HERE!!
@@ -83,6 +82,9 @@ $(document).ready(function() {
 		var pblDebtSelect = this.value;
 		var prvDebtSelect = $("#privateDebt").find(":selected").attr("value");
 		var yearSelect = $("#years").find(":selected").attr("value");
+		var displayView = $("#viewCategory").find(":selected").attr("value");
+
+		console.log("public>>", displayView);
 
 		//
 		// UPDATE CHART HERE!!
@@ -96,7 +98,9 @@ $(document).ready(function() {
 		var yearSelect = this.value;
 		var prvDebtSelect = $("#privateDebt").find(":selected").attr("value");
 		var pblDebtSelect = $("#publicDebt").find(":selected").attr("value");
+		var displayView = $("#viewCategory").find(":selected").attr("value");
 
+		console.log("year>>", displayView);
 		//
 		// UPDATE CHART HERE!!
 		//
@@ -105,5 +109,45 @@ $(document).ready(function() {
 		createColorLegend(data[yearSelect], pblDebtSelect, prvDebtSelect);
 	});
 
+	$("#viewCategory").on("change", function(){
+		var displayView = this.value;
+		var prvDebtSelect = $("#privateDebt").find(":selected").attr("value");
+		var pblDebtSelect = $("#publicDebt").find(":selected").attr("value");
+		var yearSelect = $("#years").find(":selected").attr("value");
+
+		if (displayView == "displayAll") {
+			// transition back to displaying all countries
+
+			////////////////////////////////////////
+			////////////// COMPLETE!! //////////////
+			////////////////////////////////////////
+			console.log("ALL!!");
+		} else if (displayView == "byIncGroup") {
+			// transition to displaying by income group
+
+
+			////////////////////////////////////////
+			////////////// completing //////////////
+			////////////////////////////////////////
+
+			console.log("INCOME!!");
+			updateIncomeChart(
+				data[yearSelect],
+				pblDebtSelect,
+				prvDebtSelect,
+			);
+
+
+		} else {
+			// displayView == "byRegion"
+			// transition to displaying by region
+
+			////////////////////////////////////////
+			////////////// COMPLETE!! //////////////
+			////////////////////////////////////////
+			console.log("REGION");
+		}
+
+	});
 
 });

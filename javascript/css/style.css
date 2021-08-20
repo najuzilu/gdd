@@ -45,7 +45,9 @@ body {
 	shape-rendering: crispEdges;
 }
 
-.gaussian_line line {
+.gaussian_line, .gaussian_line_adv,
+	.gaussian_line_up_mid, .gaussian_line_low_mid,
+	.gaussian_line_low line {
 	stroke:#ccc;
 	shape-rendering: crispEdges;
 	stroke-dasharray: 1,1;
