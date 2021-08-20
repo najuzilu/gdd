@@ -428,6 +428,15 @@ function createChart(data, pubDebt, prvDebt){
 	simulation.nodes(data)
 		.on("tick", ticked)
 		.on("end", () => {
+
+			// the following func doesn't have to wait
+			// for the final cx/cy coordinates but
+			// it looks asthetically pleasing.
+			// create debt ratio text at the bottom
+			debtRatioText(data, x_indicator, r_indicator,
+				gaussianDistance_y, xScale
+			);
+
 			// have to wait for simulation to end
 			// in order to add circleRepText
 
@@ -610,10 +619,5 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("dy", ".35em")
 		.attr("text-anchor", "end")
 		.attr("class", "prvdebt_value");
-
-	// create debt ratio text at the bottom
-	debtRatioText(data, x_indicator, r_indicator,
-		gaussianDistance_y, xScale
-	);
 
 }
