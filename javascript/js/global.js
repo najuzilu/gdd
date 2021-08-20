@@ -12,6 +12,8 @@ var distance = {
 	left: 0.15,
 };
 
+var bubbles;
+
 // set colors
 var colors = [
 	"#466e12", "#77bc1f", "#C5E0B4",

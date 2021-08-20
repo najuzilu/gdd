@@ -259,7 +259,7 @@ function createChart(data, pubDebt, prvDebt){
 	var tooltipDistance_y = rectHeight + triangleHeight;
 
 	// Setup bubbles
-	var bubbles = svg.append("g")
+	bubbles = svg.append("g")
 		.attr("class", "bubbles")
 		.attr("transform", "translate(" + bubDistance_x + ", " + bubDistance_y + ")")
 		.selectAll(".bubble")
@@ -547,7 +547,14 @@ function createChart(data, pubDebt, prvDebt){
 	var triangleC_x = 1/2 * rectWidth;
 	var triangleC_y = rectHeight + triangleHeight;
 
-	var tooltip = svg.append("g")
+	var tooltipG = d3.select("svg#chart")
+		.append("g")
+		.attr("class", "tooltip-group")
+		.attr("transform", "translate(" + svgDistance_x + "," + svgDistance_y + ")");
+
+
+	var tooltip = tooltipG
+		.append("g")
 		.attr("class", "tooltips")
 		.style("display", "none");
 	tooltip.append("path")
