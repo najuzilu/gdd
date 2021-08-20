@@ -65,7 +65,7 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	// set height and width
 	var oldHeight = d3.select(".chart").select("svg").style("height");
 	oldHeight = parseInt(oldHeight.substring(0, oldHeight.length-2));
-	var height = oldHeight * 3;
+	var height = oldHeight * 2.3;
 	var width = $(".chart").parent().width();
 
 	var svg = d3.select(".chart")
@@ -97,7 +97,7 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	var xAxisDistance_y = oldHeight * 0.15;
 
 	var gaussLineAdv_x = xAxisDistance_x;
-	var gaussLineAdv_y = xAxisDistance_y + width * 0.16;
+	var gaussLineAdv_y = xAxisDistance_y + width * 0.13;
 
 	var gaussNames = [
 		"gaussian_line_adv",
@@ -122,7 +122,7 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 		// transition time
 		var durationTime = 600;
 		// y coordinate of gaussian distribution
-		var gauss_y = gaussLineAdv_y * (i + 1) + (i * 80);
+		var gauss_y = gaussLineAdv_y * (i + 1) + (i * 50);
 		// new gaussian dist lines
 		var line = gaussGroup.append("g")
 			.attr("class", elem)
