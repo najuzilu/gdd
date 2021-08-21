@@ -17,7 +17,6 @@ const publicDebtCategories = [
 const viewCategories = [
 	["All Countries", "displayAll"],
 	["By Income Group", "byIncGroup"],
-	["By Region", "byRegion"],
 ];
 
 function addOptionCategories(selectId, selectArray){

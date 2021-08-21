@@ -2,9 +2,7 @@
 // d3.select("svg").style("height", new_height + 'px');
 
 // Things to do here
-// 1. Settup gaussian dist lines for each category
 // 2. Create the xAxis labels for each category
-// 3. Create vertical average lines for each category
 // 4. create text info for each category which will be displayed
 //		below the axis label text for each category.
 // 5. main: create a transition to category function!!
@@ -43,7 +41,8 @@ function cleanAllCountries(){
 
 
 function updateIncomeChart(data, pubDebt, prvDebt){
-	// !!!!!!!!!!!!!!! MOVE THIS OVER TO SETUP.JS !!!!!!!!!!!!!!!
+
+	// change opacity of all country groups;
 	cleanAllCountries();
 
 	var x_indicator = pubDebt;
@@ -65,7 +64,7 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	// set height and width
 	var oldHeight = d3.select(".chart").select("svg").style("height");
 	oldHeight = parseInt(oldHeight.substring(0, oldHeight.length-2));
-	var height = oldHeight * 2.3;
+	var height = oldHeight * 2.31;
 	var width = $(".chart").parent().width();
 
 	var svg = d3.select(".chart")
@@ -119,6 +118,10 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	var alpha = 1;
 
 	gaussNames.forEach(function(elem, i){
+		// calculate mean for each group and visualize
+		var group = groupByIncome.get(incomeGroups[i]);
+		var mean = d3.mean(group, d => d[x_indicator]);
+
 		// transition time
 		var durationTime = 600;
 		// y coordinate of gaussian distribution
@@ -142,12 +145,8 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 			.attr("y", gauss_y)
 			.style("font-weight", "bold");
 
-		// calculate mean for each group and visualize
-		var group = groupByIncome.get(incomeGroups[i]);
-		var mean = d3.mean(group, d => d[x_indicator]);
-
-		var mean_y1 = gauss_y - 110;
-		var mean_y2 = gauss_y + 110;
+		var mean_y1 = gauss_y - 90;
+		var mean_y2 = gauss_y + 90;
 
 		// append mean line
 		var meanLine = meanGroup.append("line")
@@ -207,8 +206,15 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 					.attr("cx", d => d.x)
 					.attr("cy", d => d.y);
 			});
+
+		// debt ratio text for inc group
+		var distanceFromGauss = 80;
+		debtRatioText(sim.nodes(),
+			x_indicator,
+			r_indicator,
+			gauss_y,
+			distanceFromGauss
+		);
 	});
-
-
 
 }

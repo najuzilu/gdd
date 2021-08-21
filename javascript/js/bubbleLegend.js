@@ -164,5 +164,4 @@ function createColorLegend(data, pubDebt, prvDebt){
 		.attr("font-size", "10px")
 		.text((d,i) => Object.keys(regions).find(key => regions[key] === i));
 
-
 }

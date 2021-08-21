@@ -1,4 +1,4 @@
-function debtRatioText(data, x, r, gauss_y){
+function debtRatioText(data, x, r, gauss_y, y_coeff){
 	// Create text below bubbles
 	// Calculate share of countries have debt ratio
 	// below first axis value
@@ -17,13 +17,13 @@ function debtRatioText(data, x, r, gauss_y){
 		.select("g");
 
 	// draw text only if data.length is over 10
-	if (totalCount > 20){
+	if (totalCount >= 15){ //20
 		// draw text
 		var ratio = count / totalCount;
 		var line = svg.append("g")
 			.attr("class", "debtRatioStat");
 
-		var y_coord = gauss_y + 160;
+		var y_coord = gauss_y + y_coeff;
 
 		line.append("path")
 			.attr("d",
@@ -420,7 +420,7 @@ function createChart(data, pubDebt, prvDebt){
 			// it looks asthetically pleasing.
 			// create debt ratio text at the bottom
 			debtRatioText(data, x_indicator, r_indicator,
-				gaussianDistance_y
+				gaussianDistance_y, 160
 			);
 
 			// have to wait for simulation to end
