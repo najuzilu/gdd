@@ -83,9 +83,9 @@ var regions = {
 	"Sub-Saharan Africa ":6
 }
 
-var incomeGroups = [
-	"High income",
-	"Upper middle income",
-	"Lower middle income",
-	"Low income",
-];
+var incomeGroups = {
+	"High income": 0,
+	"Upper middle income": 1,
+	"Lower middle income": 2,
+	"Low income": 3
+};

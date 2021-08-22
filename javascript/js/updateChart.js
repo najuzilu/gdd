@@ -1,11 +1,7 @@
-// change height of svg
-// d3.select("svg").style("height", new_height + 'px');
-
-// Things to do here
-// 2. Create the xAxis labels for each category
+// Things to do
 // 4. create text info for each category which will be displayed
 //		below the axis label text for each category.
-// 5. main: create a transition to category function!!
+// 			checkout var labelsByIncGroup = [];
 
 function toTitleCase(str) {
 	return str.replace(
@@ -44,6 +40,9 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 
 	// change opacity of all country groups;
 	cleanAllCountries();
+	// clean any existing incGroup text
+	$(".incomeGroups-distLines").remove();
+	$(".incomeGroups").remove();
 
 	var x_indicator = pubDebt;
 	var r_indicator = prvDebt;
@@ -64,7 +63,8 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	// set height and width
 	var oldHeight = d3.select(".chart").select("svg").style("height");
 	oldHeight = parseInt(oldHeight.substring(0, oldHeight.length-2));
-	var height = oldHeight * 2.31;
+
+	var height = oldHeight * groupByIncome.size * 0.62 ; // 2.31
 	var width = $(".chart").parent().width();
 
 	var svg = d3.select(".chart")
@@ -117,15 +117,17 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 	var strength = 1;
 	var alpha = 1;
 
-	gaussNames.forEach(function(elem, i){
-		// calculate mean for each group and visualize
-		var group = groupByIncome.get(incomeGroups[i]);
-		var mean = d3.mean(group, d => d[x_indicator]);
+
+	groupByIncome.forEach(function(group, key){
+		var i = incomeGroups[key];
+		// calculate mean for each group to visualize
+		var mean = d3.mean(group, d=> d[x_indicator]);
+		var elem = gaussNames[i];
 
 		// transition time
 		var durationTime = 600;
 		// y coordinate of gaussian distribution
-		var gauss_y = gaussLineAdv_y * (i + 1) + (i * 50);
+		var gauss_y = gaussLineAdv_y * (i + 1) + (i * 51);
 		// new gaussian dist lines
 		var line = gaussGroup.append("g")
 			.attr("class", elem)
@@ -139,7 +141,7 @@ function updateIncomeChart(data, pubDebt, prvDebt){
 		// append the gauss dist labels by income group
 		gaussGroup.append("text")
 			.attr("class", elem + "_label")
-			.text(toTitleCase(incomeGroups[i]))
+			.text(toTitleCase(key))
 			.attr("text-anchor", "end")
 			.attr("x", -10)
 			.attr("y", gauss_y)
