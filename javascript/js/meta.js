@@ -1,3 +1,21 @@
+// Contains metadata
+
+const privateDebtCategories = [
+	["Private debt, loans and debt securities", "pvd_ls"],
+	["Household debt, loans and debt securities", "hh_ls"],
+	["Nonfinancial corporate debt, loans and debt securities","nfc_ls"],
+	["Private debt, all instruments","pvd_all"],
+	["Household debt, all instruments","hh_all"],
+	["Nonfinancial corporate debt, all instruments","nfc_all"],
+];
+
+const publicDebtCategories = [
+	["Central Government Debt","cg_debt"],
+	["General Government Debt","gg_debt"],
+	["Nonfinancial Public Sector Debt","nfps_debt"],
+	["Public Sector Debt","ps_debt"],
+];
+
 var meta = {
 	"pvd_ls" : {
 		"category": "private_debt",
@@ -87,5 +105,6 @@ var incomeGroups = {
 	"High income": 0,
 	"Upper middle income": 1,
 	"Lower middle income": 2,
-	"Low income": 3
+	"Low income": 3,
+	"Not classified": 4,
 };

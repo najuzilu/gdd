@@ -20,3 +20,20 @@ function debtRatioStat(data, pubDebt, prvDebt, xValue){
 	});
 	return [count, totalCount];
 }
+
+function addOptionCategories(selectId, selectArray){
+	selectArray.forEach(function(item, index){
+		if (index == 0) {
+			$("#"+selectId).append($("<option>", {
+				value: item[1],
+				text: item[0],
+			}).prop("selected", true));
+
+		} else {
+			$("#"+selectId).append($("<option>", {
+				value: item[1],
+				text: item[0],
+			}));
+		}
+	});
+}

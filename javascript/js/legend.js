@@ -1,21 +1,5 @@
 // Create legends
 
-function calculateColorDividers(r_max){
-	var start = 1;
-	var end = Math.ceil(r_max / 100) * 100;
-	if (r_max < 100) {
-		var count = parseInt(end/50);
-	} else if (r_max < 200) {
-		var count = parseInt(end/100);
-	} else if (r_max < 300) {
-		var count = parseInt(end/100);
-	} else {
-		var count = parseInt(end/200);
-	}
-	var circlesCount = d3.ticks(start, end, count);
-	return circlesCount;
-}
-
 function createBubbleLegend(data, pubDebt, prvDebt){
 
 	// Clean data
@@ -70,7 +54,7 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.attr("transform", "translate(" + 0 + "," + 0 + ")");
 
 
-	var circlesCount = calculateColorDividers(r_max).reverse();
+	var circlesCount = calculateDividers(r_max).reverse();
 
 	legend.selectAll("circle")
 		.data(circlesCount)
@@ -104,6 +88,22 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.style("text-anchor", "start")
 		.attr("font-size", "9px")
 		.text(d => format(parseInt(d)) + "%");
+}
+
+function calculateDividers(r_max){
+	var start = 1;
+	var end = Math.ceil(r_max / 100) * 100;
+	if (r_max < 100) {
+		var count = parseInt(end/50);
+	} else if (r_max < 200) {
+		var count = parseInt(end/100);
+	} else if (r_max < 300) {
+		var count = parseInt(end/100);
+	} else {
+		var count = parseInt(end/200);
+	}
+	var circlesCount = d3.ticks(start, end, count);
+	return circlesCount;
 }
 
 function createColorLegend(data, pubDebt, prvDebt){

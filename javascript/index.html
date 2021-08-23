@@ -11,27 +11,24 @@
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-	<!-- Combobox script for the search box -->
-	<script src="js/bootstrap-combobox.js"></script>
-	<link href="css/bootstrap-combobox.css" type="text/css" rel="stylesheet">
-
 	<!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <!-- Bootstrap Bundle with Popper -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
 
 	<!-- D3 scripts -->
-	<script src="js/global.js"></script>
-	<script src="js/setup.js"></script>
-	<script src="js/createAllChart.js"></script>
-	<script src="js/createIncGrpChart.js"></script>
-	<script src="js/bubbleLegend.js"></script>
-	<script src="js/updateChart.js"></script>
-	<script src="js/stats.js"></script>
+	<script src="js/util.js"></script>
+	<script src="js/meta.js"></script>
+	<script src="js/create.js"></script>
+	<script src="js/legend.js"></script>
+
+	<script src="js/main.js"></script>
+	<!-- <script src="js/createAllChart.js"></script> -->
+	<!-- <script src="js/bubbleLegend.js"></script> -->
+	<!-- <script src="js/stats.js"></script> -->
 
 	<!-- Data -->
 	<script src="js/data.js"></script>
-	<script src="js/metadata.js"></script>
 
 	<!-- style -->
 	<link href="css/style.css" type="text/css" rel="stylesheet">
@@ -44,17 +41,17 @@
 				<div class="col-sm-4 column">
 					<div class="row" style="padding-top: 50px;">
 						<div class="col-md-12 column text-center">
-							<h2 class="titles">Debt <br/>
+							<h2 class="titles">Debt<br/>
 							Around the World</h2>
-							<span class="subheader">Since 1950</span>
+							<span class="subheader">A visual exploration since 1950</span>
 						</div>
 					</div>
 				</div>
 				<div class="col-sm-7 column">
 					<div class="row">
 						<div class="col-md-12 column" style="padding-top: 30px;">
-							<p><span style="font-size: 12px;" class="expl">The Global Debt Database (GDD) is the result of a multiyear investigative process that started with the October 2016 Fiscal Monitor. The dataset comprises total gross debt of the (private and public) nonfinancial sector for an unbalanced panel of 190 advanced economies, emerging market economies and low-income countries, dating back to 1950. For more details on the methodology and definitions, please see the Mbaye, Moreno Badia and Chae (2018).<br>
-							We rely on the feedback from users to address any problems they may encounter with the data. Notification of any omissions or supplementary sources is welcome and would be fully acknowledged.
+							<p><span style="font-size: 12px;" class="expl">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br>
+							Nunc vel risus commodo viverra maecenas. Sem nulla pharetra diam sit. Viverra nibh cras pulvinar mattis nunc sed blandit. Quis blandit turpis cursus in hac. Urna nec tincidunt praesent semper. Luctus venenatis lectus magna fringilla urna porttitor rhoncus. Ornare suspendisse sed nisi lacus sed viverra tellus in hac. Pellentesque nec nam aliquam sem et tortor consequat id. Massa massa ultricies mi quis hendrerit dolor magna. Maecenas sed enim ut sem viverra aliquet. Mi ipsum faucibus vitae aliquet nec ullamcorper. Justo eget magna fermentum iaculis eu non.
 							</span></p>
 						</div>
 					</div>
@@ -98,10 +95,10 @@
 				</div>
 
 				<!-- display view -->
-				<div class="col-sm-2 column text-center">
-					<div class="form-group">
-						<select id="viewCategory" class="form-select">
-						</select>
+				<div class="col-sm-1 column text-center">
+					<div id="buttonWrapper" class="btn-group" role="group" arial-label="Color">
+						<button id="region" type="button" class="btn btn-outline-secondary active">Region</button>
+						<button id="income" type="button" class="btn btn-outline-secondary">Income</button>
 					</div>
 				</div>
 			</div>
@@ -120,8 +117,7 @@
 				</div>
 				<div class="col-sm-5 column offset-sm-1">
 					<p class="insights">
-						The chart shows different trends throughout the `x` year since `year`.
-						`X` has seen more changes than `Y`. Lorem ipsum dolor sit amet, vel te expetenda imperdiet. Vix ea nonumy ancillae definitiones, ex vocibus ceteros vix. Graece nostrud disputationi id nec. Ea sit nostro delicata. Est eu putant interpretaris.
+						Nunc vel risus commodo viverra maecenas. Sem nulla pharetra diam sit. Viverra nibh cras pulvinar mattis nunc sed blandit. Quis blandit turpis cursus in hac. Urna nec tincidunt praesent semper. Luctus venenatis lectus magna fringilla urna porttitor rhoncus. Ornare suspendisse sed nisi lacus sed viverra tellus in hac. Pellentesque nec nam aliquam sem et tortor consequat id. Massa massa ultricies mi quis hendrerit dolor magna. Maecenas sed enim ut sem viverra aliquet. Mi ipsum faucibus vitae aliquet nec ullamcorper. Justo eget magna fermentum iaculis eu non.
 
 						Per ex magna ipsum neglegentur. Ne vix suavitate imperdiet, te fugit scripserit dissentiet vix. Et usu tincidunt necessitatibus. Pro quas moderatius repudiandae ex, expetendis philosophia no vim. Quaeque intellegat sit et, eu sea detracto mandamus splendide. Duo utinam everti commune te, ad integre antiopam mei.
 						The chart shows different trends throughout the `x` year since `year`.

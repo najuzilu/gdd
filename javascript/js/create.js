@@ -1,89 +1,11 @@
-function debtRatioText(data, x, r, gauss_y, y_coeff){
-	// Create text below bubbles
-	// Calculate share of countries have debt ratio
-	// below first axis value
-	var totalCount;
-	var count;
-    var xValue = parseInt(
-    	$(".tick > text")[1].innerHTML.slice(0, -1)
-    );
-    var midXValue = parseInt(xValue / 2);
-	[count, totalCount] = debtRatioStat(
-		data, x, r, xValue
-	);
+// Create chart
 
-	var svg = d3.select(".chart")
-		.select("svg")
-		.select("g");
-
-	// draw text only if data.length is over 10
-	if (totalCount >= 15){ //20
-		// draw text
-		var ratio = count / totalCount;
-		var line = svg.append("g")
-			.attr("class", "debtRatioStat");
-
-		var y_coord = gauss_y + y_coeff;
-
-		line.append("path")
-			.attr("d",
-				"M " + xScale.range()[0] + " " + (y_coord + 20 - 5) +
-				" L " + xScale.range()[0] + " " + (y_coord + 20) +
-				" L " + xScale(midXValue) + " " + (y_coord + 20) +
-				" L " + xScale(midXValue) + " " + (y_coord + 20 + 15) +
-				" M " + xScale(midXValue) + " " + (y_coord + 20) +
-				" L " + xScale(xValue) + " " + (y_coord + 20) +
-				" L " + xScale(xValue) + " " + (y_coord + 20 - 5)
-			)
-			.attr("fill", "none")
-			.attr("stroke", "#ccc")
-			.attr("stroke-width", 0.75);
-
-		line.append("text")
-			.attr("class", "text")
-			.attr("font-style", "italic")
-			.text("About " + format(ratio * 100) + " percent of countries")
-			.attr("text-anchor", "middle")
-			.attr("x", xScale(midXValue))
-			.attr("y", y_coord + 45);
-
-		line.append("text")
-			.attr("class", "text")
-			.attr("font-style", "italic")
-			.text("in the sample have debt shares")
-			.attr("text-anchor", "middle")
-			.attr("x", xScale(midXValue))
-			.attr("y", y_coord + 60);
-
-		line.append("text")
-			.attr("class", "text")
-			.attr("font-style", "italic")
-			.text("less than " + format(xValue) + " percent.")
-			.attr("text-anchor", "middle")
-			.attr("x", xScale(midXValue))
-			.attr("y", y_coord + 75);
-	}
-}
-
-// function cleanAllIncomeGroups(){
-// 	$(".incomeGroups-distLines").remove();
-// 	$(".incomeGroups").remove();
-// }
-
-// // function updateAllChart(data, pubDebt, prvDebt){
-// // 	cleanAllIncomeGroups();
-
-// // 	createChart(data, pubDebt, prvDebt);
-// // }
-
-
-function createChart(data, pubDebt, prvDebt){
+function createChart(data, pubDebt, prvDebt, view){
 	// remove svg if exists
 	$("svg#chart").remove();
 
 	var x_indicator = pubDebt;
 	var r_indicator = prvDebt;
-	// r_indicator = "share_" + prvDebt + "_" + pubDebt;
 
 	// Clean data
 	data = cleanData(data, x_indicator, r_indicator);
@@ -95,7 +17,14 @@ function createChart(data, pubDebt, prvDebt){
 
 	// Get width and set height
 	var width = $(".chart").parent().width();
-	var height = width / 2.1;
+	var height = width / 2;
+
+	var distance = {
+		top: 0,
+		right: 0.02,
+		bottom: 25,
+		left: 0.15,
+	};
 
 	// Set all other vars
 	var svgDistance_x = distance.left * width;
@@ -161,7 +90,7 @@ function createChart(data, pubDebt, prvDebt){
 	// append x axis
 	var labelDistance = 0; //distance of label with axis, gaussian line, dots and tooltip
 	var xAxisDistance_x = 0;
-	var xAxisDistance_y = height * 0.15;
+	var xAxisDistance_y = 84;
 
 	svg.append("g")
 		.attr("class", "axis")
@@ -193,7 +122,7 @@ function createChart(data, pubDebt, prvDebt){
 
 	// Setting line for distribution
 	var gaussianDistance_x = xAxisDistance_x;
-	var gaussianDistance_y = xAxisDistance_y + width * 0.16;
+	var gaussianDistance_y = 290;
 	var line = svg.append("g")
 		.attr("class", "gaussian_line")
 		.attr("transform", "translate(" + gaussianDistance_x + "," + gaussianDistance_y + ")");
@@ -280,8 +209,12 @@ function createChart(data, pubDebt, prvDebt){
 			.attr("cy", d => d.y)
 			.attr("r", d => rScale(d[r_indicator]))
 			.style("fill", function(d) {
-				// Color by region
-				return colors[regions[d["region"]]];
+				if (view == "region"){
+					return regionColors[regions[d["region"]]];
+				} else {
+					return incomeColors[incomeGroups[d["incomeLevel"]]];
+				}
+
 			})
 			.on("mouseover", function(){
 				tooltip.style("display", null);
@@ -620,4 +553,72 @@ function createChart(data, pubDebt, prvDebt){
 		.attr("text-anchor", "end")
 		.attr("class", "prvdebt_value");
 
-}
+};
+
+
+function debtRatioText(data, x, r, gauss_y, y_coeff){
+	// Create text below bubbles
+	// Calculate share of countries have debt ratio
+	// below first axis value
+	var totalCount;
+	var count;
+    var xValue = parseInt(
+    	$(".tick > text")[1].innerHTML.slice(0, -1)
+    );
+    var midXValue = parseInt(xValue / 2);
+	[count, totalCount] = debtRatioStat(
+		data, x, r, xValue
+	);
+
+	var svg = d3.select(".chart")
+		.select("svg")
+		.select("g");
+
+	// draw text only if data.length is over 10
+	if (totalCount >= 15){ //20
+		// draw text
+		var ratio = count / totalCount;
+		var line = svg.append("g")
+			.attr("class", "debtRatioStat");
+
+		var y_coord = gauss_y + y_coeff;
+
+		line.append("path")
+			.attr("d",
+				"M " + xScale.range()[0] + " " + (y_coord + 20 - 5) +
+				" L " + xScale.range()[0] + " " + (y_coord + 20) +
+				" L " + xScale(midXValue) + " " + (y_coord + 20) +
+				" L " + xScale(midXValue) + " " + (y_coord + 20 + 15) +
+				" M " + xScale(midXValue) + " " + (y_coord + 20) +
+				" L " + xScale(xValue) + " " + (y_coord + 20) +
+				" L " + xScale(xValue) + " " + (y_coord + 20 - 5)
+			)
+			.attr("fill", "none")
+			.attr("stroke", "#ccc")
+			.attr("stroke-width", 0.75);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("About " + format(ratio * 100) + " percent of countries")
+			.attr("text-anchor", "middle")
+			.attr("x", xScale(midXValue))
+			.attr("y", y_coord + 45);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("in the sample have debt shares")
+			.attr("text-anchor", "middle")
+			.attr("x", xScale(midXValue))
+			.attr("y", y_coord + 60);
+
+		line.append("text")
+			.attr("class", "text")
+			.attr("font-style", "italic")
+			.text("less than " + format(xValue) + " percent.")
+			.attr("text-anchor", "middle")
+			.attr("x", xScale(midXValue))
+			.attr("y", y_coord + 75);
+	}
+};
