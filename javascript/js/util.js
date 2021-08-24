@@ -37,3 +37,19 @@ function addOptionCategories(selectId, selectArray){
 		}
 	});
 }
+
+function calculateDividers(r_max){
+	var start = 1;
+	var end = Math.ceil(r_max / 100) * 100;
+	if (r_max < 100) {
+		var count = parseInt(end/50);
+	} else if (r_max < 200) {
+		var count = parseInt(end/100);
+	} else if (r_max < 300) {
+		var count = parseInt(end/100);
+	} else {
+		var count = parseInt(end/200);
+	}
+	var circlesCount = d3.ticks(start, end, count);
+	return circlesCount;
+}

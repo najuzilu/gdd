@@ -7,14 +7,14 @@ const privateDebtCategories = [
 	["Private debt, all instruments","pvd_all"],
 	["Household debt, all instruments","hh_all"],
 	["Nonfinancial corporate debt, all instruments","nfc_all"],
-];
+]
 
 const publicDebtCategories = [
 	["Central Government Debt","cg_debt"],
 	["General Government Debt","gg_debt"],
 	["Nonfinancial Public Sector Debt","nfps_debt"],
 	["Public Sector Debt","ps_debt"],
-];
+]
 
 var meta = {
 	"pvd_ls" : {
@@ -89,7 +89,7 @@ var meta = {
 		"unit": "Percent of GDP",
 		"indicator": "PS_DEBT_GDP",
 	},
-};
+}
 
 var regions = {
 	"Latin America & Caribbean ": 0,
@@ -107,4 +107,4 @@ var incomeGroups = {
 	"Lower middle income": 2,
 	"Low income": 3,
 	"Not classified": 4,
-};
+}

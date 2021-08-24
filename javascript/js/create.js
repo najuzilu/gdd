@@ -7,9 +7,6 @@ function createChart(data, pubDebt, prvDebt, view){
 	var x_indicator = pubDebt;
 	var r_indicator = prvDebt;
 
-	// Clean data
-	data = cleanData(data, x_indicator, r_indicator);
-
 	// Get data values > needed for scales
 	var x_max = d3.max(data, d => d[x_indicator]);
 	var x_min = d3.min(data, d => d[x_indicator]);
@@ -553,7 +550,9 @@ function createChart(data, pubDebt, prvDebt, view){
 		.attr("text-anchor", "end")
 		.attr("class", "prvdebt_value");
 
-};
+	return simulation;
+
+}
 
 
 function debtRatioText(data, x, r, gauss_y, y_coeff){
@@ -621,4 +620,4 @@ function debtRatioText(data, x, r, gauss_y, y_coeff){
 			.attr("x", xScale(midXValue))
 			.attr("y", y_coord + 75);
 	}
-};
+}

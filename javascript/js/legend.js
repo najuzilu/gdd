@@ -2,9 +2,6 @@
 
 function createBubbleLegend(data, pubDebt, prvDebt){
 
-	// Clean data
-	data = cleanData(data, pubDebt, prvDebt);
-
 	// clean legend text prior to appending
 	$("#bubbleLegend span").remove();
 	$("#bubbleLegend svg").remove();
@@ -90,25 +87,8 @@ function createBubbleLegend(data, pubDebt, prvDebt){
 		.text(d => format(parseInt(d)) + "%");
 }
 
-function calculateDividers(r_max){
-	var start = 1;
-	var end = Math.ceil(r_max / 100) * 100;
-	if (r_max < 100) {
-		var count = parseInt(end/50);
-	} else if (r_max < 200) {
-		var count = parseInt(end/100);
-	} else if (r_max < 300) {
-		var count = parseInt(end/100);
-	} else {
-		var count = parseInt(end/200);
-	}
-	var circlesCount = d3.ticks(start, end, count);
-	return circlesCount;
-}
 
-function createColorLegend(data, pubDebt, prvDebt){
-	// Clean data
-	data = cleanData(data, pubDebt, prvDebt);
+function createColorLegend(data, pubDebt, prvDebt, html, meta, colors){
 
 	// clean legend text prior to appending
 	$("#colorLegend span").remove();
@@ -118,13 +98,19 @@ function createColorLegend(data, pubDebt, prvDebt){
 	var target = $(".colorLegend");
 	var element = $("<span>", {
 		style: "font-size: 11px",
-		html: "Color of bubbles represents world regions"
+		html: html,
 	});
 	element.insertBefore(target);
 
 	//
 	var width = 360;
-	var height = 100;
+	var height;
+
+	if (html.includes("income")){
+		height = 75;
+	} else {
+		height = 100;
+	}
 
 	var svg = d3.select("body")
 		.select(".colorLegend")
@@ -139,7 +125,7 @@ function createColorLegend(data, pubDebt, prvDebt){
 
 	var legendBarWidth = 20;
 	var legendBarHeight = 7;
-	var regionLength = Object.keys(regions).length;
+	var regionLength = Object.keys(meta).length;
 	var emptySpace = (height - regionLength * legendBarHeight) / (regionLength + 2);
 
 	legend.append("g")
@@ -162,6 +148,6 @@ function createColorLegend(data, pubDebt, prvDebt){
 		.attr("y", (d, i) => (i+1) * emptySpace + (i * legendBarHeight)+ legendBarHeight)
 		.style("text-anchor", "start")
 		.attr("font-size", "10px")
-		.text((d,i) => Object.keys(regions).find(key => regions[key] === i));
+		.text((d,i) => Object.keys(meta).find(key => meta[key] === i));
 
 }
