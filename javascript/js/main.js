@@ -18,6 +18,8 @@ var incomeColors = ["#9a9ad2", "#afbfda",
 
 $(document).ready(function() {
 	console.log("working...");
+	//Create combo box
+	// $('.combobox').combobox({bsVersion: '2'});
 
 	const start=1950, end=2020;
 	const yearRange = Array.from(

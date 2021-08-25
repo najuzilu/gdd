@@ -191,6 +191,8 @@ function createChart(data, pubDebt, prvDebt, view){
 	var tooltipDistance_x = rectWidth / 2;
 	var tooltipDistance_y = rectHeight + triangleHeight;
 
+	var oldClickValue = ""
+
 	// Setup bubbles
 	bubbles = svg.append("g")
 		.attr("class", "bubbles")
@@ -211,6 +213,45 @@ function createChart(data, pubDebt, prvDebt, view){
 				} else {
 					return incomeColors[incomeGroups[d["incomeLevel"]]];
 				}
+
+			})
+			.on("click", function(obj, d){
+				// if user clicked same element, check
+				// to see if secondary charts exists
+				// otherwise, user clicked different elements
+				// so update the secondary charts
+				if (oldClickValue == d["country"]) {
+					// if object exists, delete
+					if ($("#secondaryCharts").length > 0){
+						console.log("Same country, but secondChart exists");
+						$("#secondaryCharts").remove();
+					} else {
+						// otherwise, create
+						console.log("Same country, but secondChart does not exists");
+						createSecondCharts();
+						/////////////////////////////////////////////////////////////////////
+						/////////////////////////////////////////////////////////////////////
+						/////////////////////////////////////////////////////////////////////
+					}
+				} else {
+					// update charts and that's it
+					/////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////
+					console.log("Different country >> Create and/or update chart");
+
+					$("#secondaryCharts").remove();
+					createSecondCharts();
+
+					// set old click value to current element
+					oldClickValue = d["country"];
+				}
+
+
+
+
+
 
 			})
 			.on("mouseover", function(){
@@ -620,4 +661,31 @@ function debtRatioText(data, x, r, gauss_y, y_coeff){
 			.attr("x", xScale(midXValue))
 			.attr("y", y_coord + 75);
 	}
+}
+
+function createSecondCharts(){
+	var newDiv = $("<div>", {
+		class: "row",
+		id: "secondaryCharts",
+	}).append(
+		$("<div>", {
+			class: "col-md-5 offset-md-1 column text-center",
+		}).append(
+			$("<div>", {
+				class: "firstChart",
+			})
+		)
+	).append(
+		$("<div>", {
+			class: "col-md-5 offset-md-1 column text-center",
+		}).append(
+			$("<div>", {
+				class: "secondChart",
+			})
+		)
+	);
+	newDiv.insertAfter("#mainChart");
+
+	// create first chart showing time series of private
+	// create second chart showing time series of public
 }
