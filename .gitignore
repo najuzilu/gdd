@@ -1,2 +1,6 @@
 .DS_Store
 *.cfg
+javascript/js/helper.js
+javascript/js/inc_group.js
+javascript/js/update_chart.js
+__pycache__
