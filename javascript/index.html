@@ -23,9 +23,6 @@
 	<script src="js/legend.js"></script>
 
 	<script src="js/main.js"></script>
-	<!-- <script src="js/createAllChart.js"></script> -->
-	<!-- <script src="js/bubbleLegend.js"></script> -->
-	<!-- <script src="js/stats.js"></script> -->
 
 	<!-- Data -->
 	<script src="js/data.js"></script>
@@ -72,14 +69,20 @@
 			<!-- Indicator, year, view buttons -->
 			<div class="row text-center">
 				<!-- private debt selection -->
-				<div class="col-sm-4 offset-sm-1 column text-center">
+				<div class="col-sm-1 offset-sm-1 text-left">
+					<label class="titles" style="font-size: 13px;">Private Debt Instruments</label>
+				</div>
+				<div class="col-sm-3 column text-center">
 					<div class="form-group">
 						<select id="privateDebt" class="form-select">
 						</select>
 					  </div>
 				</div>
 				<!-- public debt selection -->
-				<div class="col-sm-3 column text-center">
+				<div class="col-sm-1 text-left">
+					<label class="titles" style="font-size: 13px;">Public Debt Instruments</label>
+				</div>
+				<div class="col-sm-2 column text-center">
 					<div class="form-group">
 						<select id="publicDebt" class="form-select">
 						</select>
@@ -95,16 +98,18 @@
 				</div>
 
 				<!-- display view -->
-				<div class="col-sm-1 column text-center">
+				<div class="col-sm-2 column text-center">
 					<div id="buttonWrapper" class="btn-group" role="group" arial-label="Color">
 						<button id="region" type="button" class="btn btn-outline-secondary active">Region</button>
 						<button id="income" type="button" class="btn btn-outline-secondary">Income</button>
 					</div>
 				</div>
+
 			</div>
 
+
 			<!-- chart -->
-			<div class="row">
+			<div class="row" id="mainChart">
 				<div class="col-md-10 offset-md-1 column text-center">
 					<div class="chart"></div>
 				</div>
