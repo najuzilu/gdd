@@ -1,12 +1,9 @@
 # python3
 from metadata import meta
 from pathlib import Path
-from io import StringIO
-import configparser
 import pandas as pd
 import numpy as np
 import requests
-import boto3
 import json
 
 
@@ -54,39 +51,29 @@ def get_indicator_data(data, indicator, query_ind):
     return output
 
 
-def main():
-    config = configparser.ConfigParser()
-    config_path = Path(__file__).parent.resolve().parents[0]
-    config_name = "credentials.cfg"
-    config.read(f"{config_path}/{config_name}")
-
-    AWS_ACCESS_KEY_ID = config.get("AWS", "AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = config.get("AWS", "AWS_SECRET_ACCESS_KEY")
-    AWS_REGION = config.get("AWS", "AWS_REGION")
-    S3_BUCKET = config.get("AWS", "AWS_BUCKET")
-
-    s3 = boto3.resource(
-        "s3",
-        region_name=AWS_REGION,
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-    )
-
-    try:
-        s3.create_bucket(
-            Bucket=S3_BUCKET,
-            CreateBucketConfiguration={
-                "LocationConstraint": AWS_REGION,
-            },
-        )
-    except Exception as e:
-        if e.response["Error"]["Code"] == "InvalidBucketName":
-            msg = f"""ERROR: `{S3_BUCKET}` bucket name is not valid.
-        Try a new bucket name."""
-        else:
-            msg = f"ERROR: Could not create S3 bucket `{S3_BUCKET}`."
-        print(msg, e)
+def get_gdp_dataframe():
+    gdp_url = "https://api.worldbank.org/v2/country/all/indicator/"
+    gdp_url += "NY.GDP.MKTP.CD?per_page=30000&format=json"
+    gdp_res = request_api(gdp_url)
+    if not gdp_res:
         return
+    _gdp_data = load_json(gdp_res)
+    if not _gdp_data:
+        return
+    gdp_data = _gdp_data[1]
+
+    data = []
+    for row in gdp_data:
+        dict_row = {}
+        dict_row["iso3"] = row["countryiso3code"]
+        dict_row["year"] = row["date"]
+        dict_row["nominal_gdp_usd"] = row["value"]
+        data.append(dict_row)
+    return pd.DataFrame(data)
+
+
+def main():
+    file_path = Path(__file__).parent.resolve()
 
     indicators = list(meta.keys())
 
@@ -133,18 +120,31 @@ def main():
     df["region"] = df["country"].apply(
         lambda x: meta_dict[x]["region"] if x in meta_dict.keys() else np.nan
     )
+    df.rename(columns={"variable": "year"}, inplace=True)
 
-    # dump df data to S3 bucket
-    csv_buffer = StringIO()
-    df.to_csv(csv_buffer, index=False)
+    # extract nominal gdp
+    gdp_df = get_gdp_dataframe()
 
-    try:
-        s3.Object(S3_BUCKET, "data.csv").put(Body=csv_buffer.getvalue())
-    except Exception as e:
-        msg = f"ERROR: Could not dump data in S3 bucket."
-        print(msg, e)
-        return
-    return
+    merged_df = pd.merge(
+        df, gdp_df, how="left", left_on=["country", "year"], right_on=["iso3", "year"]
+    )
+
+    del merged_df["iso3"]
+
+    # dump df data to csv
+    merged_df.to_csv(file_path / "data/data.csv", index=False)
+
+    # group merged data by year
+    final_output = {}
+    grouped_df = merged_df.groupby("year")
+    for name, group in grouped_df:
+        final_output[name] = [dict(v) for _, v in group.iterrows()]
+
+    # dump json to S3 bucket
+    with open(file_path / "data/data.json", "w", encoding="utf-8") as file:
+        json.fump(final_output, file, ensure_ascii=False, indent=4)
+
+    return "Successful!"
 
 
 def get_metadata(metadata):
