@@ -6,3 +6,4 @@ javascript/js/update_chart.js
 __pycache__
 python/data/
 helper.py
+.ipynb_checkpoints
