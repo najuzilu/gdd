@@ -13,3 +13,5 @@ dependencies:
   - black
   - flake8
   - pre_commit
+  - jupyter
+  - matplotlib
